@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import {RequestAuthedI} from '../../interfaces/RequestAuthedI';
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt');
 const userModel = require('../../models/user.ts')
@@ -14,7 +15,7 @@ module.exports.login = async( req: Request, res: Response ) => {
     if (!isPassEquals) {
       return res.status(401).send({msg: 'Incorrect passwords'})
     }
-    const token = jwt.sign({login, password}, process.env.ACCESS_SECRET, {expiresIn: '30d'})
+    const token = jwt.sign({login}, process.env.ACCESS_SECRET, {expiresIn: '30d'})
     return res.send({ token })
   } catch (err) {
     return res.status(500).send({msg: 'Server doesnt work'})
@@ -39,4 +40,9 @@ module.exports.registration = async ( req: Request, res: Response ) => {
   } catch (err) {
     return res.status(500).send({ msg: 'Error while working with DB' });
   }
+}
+
+module.exports.test = ( req: RequestAuthedI, res: Response ) => {
+  const { login } = req.user;
+  return res.send({msg: `${login} here`});
 }

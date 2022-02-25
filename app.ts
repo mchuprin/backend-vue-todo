@@ -9,10 +9,10 @@ const app = express();
 require('dotenv').config();
 
 app.use(bodyParser.json());
+app.use(cors());
 
 const routes = require('./src/modules/routes/index');
 
-app.use(cors());
 app.use('/api', routes);
 
 const url = process.env.mongoURL;
